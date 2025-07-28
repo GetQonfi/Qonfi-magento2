@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+    <widget class="Qonfi\Qonfi\Block\WysiwygBlock" id="qonfi_block_widget_wysiwyg">
+        <label>Qonfi Widget WYSIWYG</label>
+        <description>This is a widget to add Qonfi to the pages you want</description>
+        <parameters>
+            <parameter name="data_qonfi_uuid" xsi:type="text" required="true" visible="true" sort_order="10">
+                <label>Qonfi wysiwyg UUID</label>
+            </parameter>
+            
+            <parameter name="data_qonfi_product_check" xsi:type="select" visible="true" required="false" sort_order="10">
+                <label translate="true">Product Check</label>
+                <description>Automatically enable the product check on product pages</description>
+                <options>
+                    <option name="on" value="1">
+                        <label translate="true">On</label>
+                    </option>
+                    <option name="off" value="0" selected="true">
+                        <label translate="true">Off</label>
+                    </option>
+                </options>
+            </parameter>
+
+            <parameter name="data_qonfi_view_type" xsi:type="select" visible="true" required="true" sort_order="20">
+                <label translate="true">Type</label>
+                <options>
+                    <option name="popup" value="popup" selected="true">
+                        <label>Popup</label>
+                    </option>
+                    <option name="inline" value="inline">
+                        <label>Inline</label>
+                    </option>
+                    <option name="sidebar" value="sidebar">
+                        <label>Sidebar</label>
+                    </option>
+                </options>
+            </parameter>
+
+            <parameter name="data_qonfi_content_wysiwyg" xsi:type="block" required="false" visible="true" sort_order="30">
+                <label translate="true">WYSIWYG editor</label>
+                <block class="Qonfi\Qonfi\Block\Types\WysiwygEditor"/>
+            </parameter>
+        </parameters>
+    </widget>
+
+    <widget class="Qonfi\Qonfi\Block\DefaultBlock" id="qonfi_block_widget_default">
+        <label>Qonfi Widget default</label>
+        <description>This is a widget to add Qonfi to the pages you want</description>
+        <parameters>
+            <parameter name="data_qonfi_uuid" xsi:type="text" required="true" visible="true" sort_order="10">
+                <label>Qonfi UUID</label>
+            </parameter>
+
+            <parameter name="data_qonfi_product_check" xsi:type="select" visible="true" required="false" sort_order="10">
+                <label translate="true">Product Check</label>
+                <description>Automatically enable the product check on product pages</description>
+                <options>
+                    <option name="on" value="1">
+                        <label translate="true">On</label>
+                    </option>
+                    <option name="off" value="0" selected="true">
+                        <label translate="true">Off</label>
+                    </option>
+                </options>
+            </parameter>
+            
+
+            <parameter name="data_qonfi_view_type" xsi:type="select" visible="true" required="true" sort_order="20">
+                <label translate="true">Type</label>
+                <options>
+                    <option name="popup" value="popup" selected="true">
+                        <label>Popup</label>
+                    </option>
+                    <option name="inline" value="inline">
+                        <label>Inline</label>
+                    </option>
+                    <option name="sidebar" value="sidebar">
+                        <label>Sidebar</label>
+                    </option>
+                </options>
+            </parameter>
+
+            <parameter name="data_qonfi_content_title_text" xsi:type="text" required="true" visible="true" sort_order="30">
+                <label translate="true">Title</label>
+            </parameter>
+            <parameter name="data_qonfi_content_text_text" xsi:type="text" required="true" visible="true" sort_order="30">
+                <label translate="true">Content text</label>
+            </parameter>
+            <parameter name="data_qonfi_content_button_text" xsi:type="text" required="true" visible="true" sort_order="30">
+                <label translate="true">Button text</label>
+            </parameter>
+
+
+
+            <parameter name="data_qonfi_content_background_color" xsi:type="block" required="false" visible="true" sort_order="30">
+                <label translate="true">Background Color</label>
+                <block class="Qonfi\Qonfi\Block\Types\ColorPicker"/>
+            </parameter>
+            <parameter name="data_qonfi_content_text_color" xsi:type="block" required="false" visible="true" sort_order="30">
+                <label translate="true">Text Color</label>
+                <block class="Qonfi\Qonfi\Block\Types\ColorPicker"/>
+            </parameter>
+            <parameter name="data_qonfi_content_button_text_color" xsi:type="block" required="false" visible="true" sort_order="30">
+                <label translate="true">Button Text Color</label>
+                <block class="Qonfi\Qonfi\Block\Types\ColorPicker"/>
+            </parameter>
+            <parameter name="data_qonfi_content_button_background_color" xsi:type="block" required="false" visible="true" sort_order="30">
+                <label translate="true">Button Background Color</label>
+                <block class="Qonfi\Qonfi\Block\Types\ColorPicker"/>
+            </parameter>
+        </parameters>
+    </widget>
+</widgets>

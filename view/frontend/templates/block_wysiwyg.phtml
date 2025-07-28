@@ -1,0 +1,20 @@
+<?php
+if( $block->isQonfiEnabled() ) {
+    $viewType = $block->getQonfiViewType();
+    $productId = $block->getQonfiProductId();
+    $uuid = $block->getQonfiUuid();
+
+    $location_full = $block->getLanguage();
+    $language = $location_full ? $location_full : '';
+    ?>
+    <div
+        data-qonfi-uuid="<?= $escaper->escapeHtmlAttr($uuid); ?>"
+        data-qonfi-view-type="<?= $escaper->escapeHtmlAttr($viewType); ?>"
+        <?= !empty($productId) ? 'data-qonfi-product-id="'.$escaper->escapeHtmlAttr($productId).'"' : '' ?>
+        <?= !empty($language) ? 'data-qonfi-lang="'.$escaper->escapeHtmlAttr($language).'"' : '' ?>
+        style="<?= $viewType === 'inline' ? 'min-height: 286px;' : '' ?> <?= !empty($productId) ? 'display: none;' : '' ?>"
+    >
+        <?= $block->getQonfiContentHtml(); ?>
+    </div>
+    <?php
+}

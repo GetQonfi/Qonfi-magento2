@@ -1,0 +1,53 @@
+<?php
+    if( $block->isQonfiEnabled() ) {
+
+        if ( $block->getQonfiProductCheck() ) {
+            $productId = $block->getQonfiProductId();
+        }
+        
+        $viewType = $block->getQonfiViewType();
+
+        $uuid = $block->getQonfiUuid();
+
+        $language = $block->getLanguage();
+
+        $titleText = $block->getData('data_qonfi_content_title_text');
+        $contentText = $block->getData('data_qonfi_content_text_text');
+        $buttonText = $block->getData('data_qonfi_content_button_text');
+        $backgroundColor = $block->getData('data_qonfi_content_background_color');
+        $textColor = $block->getData('data_qonfi_content_text_color');
+        $buttonTextColor = $block->getData('data_qonfi_content_button_text_color');
+        $buttonBackgroundColor = $block->getData('data_qonfi_content_button_background_color');
+        $buttonBorderColor = $block->getData('data_qonfi_content_button_background_color');
+    ?>
+    <div
+        class="qonfi-block-container"
+        data-qonfi-uuid="<?= $escaper->escapeHtmlAttr($uuid); ?>"
+        data-qonfi-view-type="<?= $escaper->escapeHtmlAttr($viewType); ?>"
+        <?= !empty($productId) ? 'data-qonfi-product-id="'.$escaper->escapeHtmlAttr($productId).'"' : '' ?>
+        <?= !empty($language) ? 'data-qonfi-lang="'.$escaper->escapeHtmlAttr($language).'"' : '' ?>
+        style="<?= $viewType === 'inline' ? 'min-height: 286px;' : '' ?> <?= !empty($productId) ? 'display: none;' : '' ?>"
+    >
+        <?php if ($viewType !== 'inline') { ?>
+            <div class="qonfi-block" style="background-color: <?= $escaper->escapeHtml($backgroundColor); ?>;">
+                <div class="qonfi-block-content">
+                    <h2 class="qonfi-block-title" style="<?= !empty($textColor) ? 'color:'.$escaper->escapeHtml($textColor).';' : '' ?>">
+                        <?= $escaper->escapeHtml($titleText); ?>
+                    </h2>
+                    <p class="qonfi-block-text" style="<?= !empty($textColor) ? 'color:'.$escaper->escapeHtml($textColor).';' : '' ?>">
+                        <?= $escaper->escapeHtml($contentText); ?>
+                    </p>
+                </div>
+                <div class="qonfi-block-action">
+                    <button class="qonfi-block-button action primary" style="
+                        <?= !empty($buttonBackgroundColor) ? 'background-color:'.$escaper->escapeHtml($buttonBackgroundColor).';' : '' ?> 
+                        <?= !empty($buttonBorderColor) ? 'border-color:'.$escaper->escapeHtml($buttonBorderColor).';' : '' ?>
+                        <?= !empty($buttonTextColor) ? 'color:'.$escaper->escapeHtml($buttonTextColor).';' : '' ?>
+                    ">
+                        <?= $escaper->escapeHtml($buttonText); ?>
+                    </button>
+                </div>
+            </div>
+        <?php } ?>
+    </div>
+<?php } ?>

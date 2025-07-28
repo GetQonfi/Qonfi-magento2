@@ -1,0 +1,31 @@
+{
+    "name": "qonfi/block",
+    "description": "Your Qonfi module to integrate Qonfi with your site",
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "license": [
+      "MIT"
+    ],
+    "require": {
+      "php": "~8.4.0",
+      "magento/framework": "^103"
+    },
+    "autoload": {
+      "files": [
+        "registration.php"
+      ],
+      "psr-4": {
+        "Qonfi\\Qonfi\\": ""
+      }
+    },
+    "readme": "README.md",
+    "authors": [
+      {
+        "name": "Ivar Post",
+        "email": "ivar@getqonfi.com",
+        "homepage": "https://getqonfi.com",
+        "role": "Developer"
+      }
+    ]
+  }
+  

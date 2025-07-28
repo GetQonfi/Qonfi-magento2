@@ -1,0 +1,52 @@
+.qonfi-block-container {
+    container-type: inline-size;
+    container-name: qonfi-block;
+}
+
+.qonfi-block {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-bottom: 30px;
+    padding: 20px;
+    cursor: pointer;
+}
+
+.qonfi-block-title {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+}
+
+.qonfi-block-content {
+    margin-bottom: 2rem;
+}
+
+.qonfi-block-text {
+    margin-bottom: 0;
+}
+
+.qonfi-block-button.action.primary {
+    padding: 10px 20px;
+}
+
+@container qonfi-block (min-width: 768px) {
+    .qonfi-block {
+        padding: 30px;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .qonfi-block-content {
+        margin-bottom: 0;
+    }
+
+    .qonfi-block-action {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .qonfi-block-title {
+        font-size: 2.2rem;
+    }
+}

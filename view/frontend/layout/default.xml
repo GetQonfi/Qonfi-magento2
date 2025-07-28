@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Qonfi_Qonfi::css/styles.css"/>
+    </head>
+    <referenceContainer name="before.body.end">
+        <block ifconfig="qonfi_section/general/enable" class="Magento\Framework\View\Element\Text" name="qonfiScript">
+            <arguments>
+                <argument name="text" xsi:type="string"><![CDATA[<script src="https://platform.getqonfi.com/build-wizard3/wizard3.js"></script>]]></argument>
+            </arguments>
+        </block>
+    </referenceContainer>
+</page>

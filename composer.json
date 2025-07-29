@@ -1,8 +1,8 @@
 {
-    "name": "qonfi/block",
+    "name": "qonfi/magento",
     "description": "Your Qonfi module to integrate Qonfi with your site",
     "type": "magento2-module",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "license": [
       "MIT"
     ],

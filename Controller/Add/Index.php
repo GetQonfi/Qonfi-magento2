@@ -9,6 +9,7 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Framework\DataObject;
+use Magento\Framework\UrlInterface;
 
 /**
  * Qonfi Add to Cart Controller
@@ -42,6 +43,10 @@ class Index implements ActionInterface
      * @var CartRepository
      */
     protected $cartRepository;
+    /**
+     * @var UrlBuilder
+     */
+    protected $urlBuilder;
 
     /**
      * Index constructor.
@@ -51,6 +56,7 @@ class Index implements ActionInterface
      * @param ManagerInterface $messageManager
      * @param RequestInterface $request
      * @param CartRepositoryInterface $cartRepository
+     * @param UrlInterface $urlBuilder
      */
     public function __construct(
         CheckoutSession $checkoutSession,
@@ -58,7 +64,8 @@ class Index implements ActionInterface
         ResultFactory $resultFactory,
         ManagerInterface $messageManager,
         RequestInterface $request,
-        CartRepositoryInterface $cartRepository
+        CartRepositoryInterface $cartRepository,
+        UrlInterface $urlBuilder,
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->productRepository = $productRepository;
@@ -66,6 +73,7 @@ class Index implements ActionInterface
         $this->messageManager = $messageManager;
         $this->request = $request;
         $this->cartRepository = $cartRepository;
+        $this->urlBuilder = $urlBuilder;
     }
 
     /**
@@ -78,6 +86,7 @@ class Index implements ActionInterface
         $response = $this->resultFactory->create(ResultFactory::TYPE_RAW);
         $productId = (int)$this->request->getParam('id');
         $quantity = (int)$this->request->getParam('quantity', 1);
+        $isAjax = (int)$this->request->getParam('ajax', 0);
         
         if ($quantity < 1) {
             $quantity = 1;
@@ -109,12 +118,16 @@ class Index implements ActionInterface
             $this->messageManager->addErrorMessage(
                 __('Could not add "%1" to cart. Error: %2', $productName, $e->getMessage())
             );
-            
-            // Configure response
             $response->setHttpResponseCode(404);
             $response->setHeader('Status', '404 product not found', true);
         }
-
+        
+        if( !$isAjax ) {
+            $redirectUrl = $this->urlBuilder->getUrl('checkout/cart');
+            $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+            $resultRedirect->setUrl($redirectUrl);
+            return $resultRedirect;
+        }
         return $response;
     }
 }

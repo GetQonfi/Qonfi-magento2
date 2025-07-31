@@ -9,8 +9,6 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Framework\DataObject;
-use Magento\Framework\UrlInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Qonfi Add to Cart Controller
@@ -44,14 +42,6 @@ class Index implements ActionInterface
      * @var CartRepository
      */
     protected $cartRepository;
-    /**
-     * @var Logger
-     */
-    protected $logger;
-    /**
-     * @var UrlBuilder
-     */
-    protected $urlBuilder;
 
     /**
      * Index constructor.
@@ -61,8 +51,6 @@ class Index implements ActionInterface
      * @param ManagerInterface $messageManager
      * @param RequestInterface $request
      * @param CartRepositoryInterface $cartRepository
-     * @param UrlInterface $urlBuilder
-     * @param LoggerInterface $logger
      */
     public function __construct(
         CheckoutSession $checkoutSession,
@@ -70,9 +58,7 @@ class Index implements ActionInterface
         ResultFactory $resultFactory,
         ManagerInterface $messageManager,
         RequestInterface $request,
-        CartRepositoryInterface $cartRepository,
-        UrlInterface $urlBuilder,
-        LoggerInterface $logger
+        CartRepositoryInterface $cartRepository
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->productRepository = $productRepository;
@@ -80,8 +66,6 @@ class Index implements ActionInterface
         $this->messageManager = $messageManager;
         $this->request = $request;
         $this->cartRepository = $cartRepository;
-        $this->urlBuilder = $urlBuilder;
-        $this->logger = $logger;
     }
 
     /**
@@ -91,16 +75,12 @@ class Index implements ActionInterface
      */
     public function execute()
     {
+        $response = $this->resultFactory->create(ResultFactory::TYPE_RAW);
         $productId = (int)$this->request->getParam('id');
         $quantity = (int)$this->request->getParam('quantity', 1);
+        
         if ($quantity < 1) {
             $quantity = 1;
-        }
-
-        // Use Magento's URL builder for robust cart URL generation
-        $redirectUrl = $this->request->getParam('redirect_url');
-        if (!$redirectUrl || strpos($redirectUrl, '/') !== 0 || strpos($redirectUrl, '//') === 0) {
-            $redirectUrl = $this->urlBuilder->getUrl('checkout/cart');
         }
 
         $product = null;
@@ -125,13 +105,16 @@ class Index implements ActionInterface
 
             $this->messageManager->addSuccessMessage(__('Product "%1" added to cart.', $product->getName()));
         } catch (\Exception $e) {
-            $productName = $product && $product->getId() ? $product->getName() : __('(unknown product)');
-            $this->messageManager->addErrorMessage(__('Could not add "%1" to cart.', $productName));
-            $this->logger->error('Qonfi_AddToCart: Exception: ' . $e->getMessage());
+            $productName = $product && $product->getId() ? $product->getName() : __('unknown product');
+            $this->messageManager->addErrorMessage(
+                __('Could not add "%1" to cart. Error: %2', $productName, $e->getMessage())
+            );
+            
+            // Configure response
+            $response->setHttpResponseCode(404);
+            $response->setHeader('Status', '404 product not found', true);
         }
 
-        $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-        $resultRedirect->setUrl($redirectUrl);
-        return $resultRedirect;
+        return $response;
     }
 }

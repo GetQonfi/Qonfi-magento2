@@ -44,7 +44,6 @@ class DefaultBlock extends Template implements BlockInterface
         $this->setTemplate('Qonfi_Qonfi::block.phtml');
         parent::__construct($context, $data);
         $this->localeResolver = $localeResolver;
-        // $this->scopeConfig assignment is not needed!
     }
     
     /**

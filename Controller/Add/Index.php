@@ -10,6 +10,7 @@ use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Framework\DataObject;
 use Magento\Framework\UrlInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Qonfi Add to Cart Controller
@@ -36,7 +37,7 @@ class Index implements ActionInterface
      */
     protected $messageManager;
     /**
-     * @var Request
+     * @var RequestInterface
      */
     protected $request;
     /**
@@ -47,6 +48,10 @@ class Index implements ActionInterface
      * @var UrlBuilder
      */
     protected $urlBuilder;
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     /**
      * Index constructor.
@@ -57,6 +62,7 @@ class Index implements ActionInterface
      * @param RequestInterface $request
      * @param CartRepositoryInterface $cartRepository
      * @param UrlInterface $urlBuilder
+     * @param LoggerInterface $logger
      */
     public function __construct(
         CheckoutSession $checkoutSession,
@@ -66,6 +72,7 @@ class Index implements ActionInterface
         RequestInterface $request,
         CartRepositoryInterface $cartRepository,
         UrlInterface $urlBuilder,
+        LoggerInterface $logger,
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->productRepository = $productRepository;
@@ -74,6 +81,7 @@ class Index implements ActionInterface
         $this->request = $request;
         $this->cartRepository = $cartRepository;
         $this->urlBuilder = $urlBuilder;
+        $this->logger = $logger;
     }
 
     /**
@@ -86,8 +94,9 @@ class Index implements ActionInterface
         $response = $this->resultFactory->create(ResultFactory::TYPE_RAW);
         $productId = (int)$this->request->getParam('id');
         $quantity = (int)$this->request->getParam('quantity', 1);
-        $isAjax = (int)$this->request->getParam('ajax', 0);
-        
+        $headers = getallheaders();
+        $isAjax = (isset($headers['Ajax']) && (int)$headers['Ajax'] == 1 ) ? 1 : 0;
+
         if ($quantity < 1) {
             $quantity = 1;
         }
@@ -116,12 +125,13 @@ class Index implements ActionInterface
         } catch (\Exception $e) {
             $productName = $product && $product->getId() ? $product->getName() : __('unknown product');
             $this->messageManager->addErrorMessage(
-                __('Could not add "%1" to cart. Error: %2', $productName, $e->getMessage())
+                __('Could not add "%1" to cart. %2', $productName, $e->getMessage())
             );
             $response->setHttpResponseCode(404);
             $response->setHeader('Status', '404 product not found', true);
         }
         
+        // Redirect if request is not send via ajax
         if( !$isAjax ) {
             $redirectUrl = $this->urlBuilder->getUrl('checkout/cart');
             $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);

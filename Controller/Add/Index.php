@@ -94,8 +94,8 @@ class Index implements ActionInterface
         $response = $this->resultFactory->create(ResultFactory::TYPE_RAW);
         $productId = (int)$this->request->getParam('id');
         $quantity = (int)$this->request->getParam('quantity', 1);
-        $headers = getallheaders();
-        $isAjax = (isset($headers['Ajax']) && (int)$headers['Ajax'] == 1 ) ? 1 : 0;
+        $headers = array_change_key_case(getallheaders(), CASE_LOWER);
+        $isAjax = (isset($headers['ajax']) && (int)$headers['ajax'] == 1 ) ? 1 : 0;
 
         if ($quantity < 1) {
             $quantity = 1;

@@ -1,6 +1,25 @@
 # Overview
 The Qonfi product finder for Magento 2 extension provides two custom widget templates that allow you to easily integrate Qonfi into your store. The extension places the required vendor scripts into the head of your site and offers flexible widget configuration options, including display type and WYSIWYG content support.
 
+# Installation
+
+## Option 1: Install via Magento Marketplace
+You can install the Qonfi product finder extension directly from the Magento Marketplace. Visit the following link to download and install the extension: [Qonfi Block on Magento Marketplace](https://commercemarketplace.adobe.com/qonfi-block.html).
+
+## Option 2: Install via Composer
+Alternatively, you can install the extension using Composer. Run the following command in your terminal:
+
+```bash
+composer require qonfi/magento
+```
+
+After installation, make sure to enable the module and clear the cache:
+```bash
+bin/magento module:enable Qonfi_Qonfi
+bin/magento setup:upgrade
+bin/magento cache:flush
+```
+
 # Features
 Two custom widget templates for Qonfi integration.
 Automatic inclusion of the Qonfi vendor script in the head.
@@ -22,25 +41,6 @@ Background Color - color - Block background color
 Text Color - color - Primary text color
 Button Text Color - color - Button text color
 Button Background Color - color - Button background color
-
-# Installation
-
-## Option 1: Install via Magento Marketplace
-You can install the Qonfi product finder extension directly from the Magento Marketplace. Visit the following link to download and install the extension: [Qonfi Block on Magento Marketplace](https://commercemarketplace.adobe.com/qonfi-block.html).
-
-## Option 2: Install via Composer
-Alternatively, you can install the extension using Composer. Run the following command in your terminal:
-
-```bash
-composer require qonfi/magento
-```
-
-After installation, make sure to enable the module and clear the cache:
-```bash
-bin/magento module:enable Qonfi_Qonfi
-bin/magento setup:upgrade
-bin/magento cache:flush
-```
 
 # Usage
 In the Magento Admin Panel, navigate to Content > Widgets.

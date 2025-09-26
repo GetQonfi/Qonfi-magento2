@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Qonfi\Qonfi\Block;
 
+use Magento\Catalog\Api\ProductRepositoryInterface;
+
 use Magento\Framework\View\Element\Template;
 use Magento\Widget\Block\BlockInterface;
-use Magento\Framework\App\ObjectManager;
-use Magento\Framework\Registry;
 use Magento\Framework\Locale\Resolver;
 
 class DefaultBlock extends Template implements BlockInterface
@@ -30,19 +30,27 @@ class DefaultBlock extends Template implements BlockInterface
     protected $localeResolver;
 
     /**
+     * @var ProductRepositoryInterface
+     */
+    private $productRepository;
+
+    /**
      * DefaultBlock constructor.
      *
+     * @param ProductRepositoryInterface $productRepository
      * @param Template\Context $context
      * @param Resolver $localeResolver
      * @param array $data
      */
     public function __construct(
+        ProductRepositoryInterface $productRepository,
         \Magento\Framework\View\Element\Template\Context $context,
         Resolver $localeResolver,
         array $data = []
     ) {
-        $this->setTemplate('Qonfi_Qonfi::block.phtml');
         parent::__construct($context, $data);
+        $this->setTemplate('Qonfi_Qonfi::block.phtml');
+        $this->productRepository = $productRepository;
         $this->localeResolver = $localeResolver;
     }
     
@@ -73,6 +81,13 @@ class DefaultBlock extends Template implements BlockInterface
         );
     }
 
+    public function getCurrentProduct(): ?\Magento\Catalog\Api\Data\ProductInterface
+    {
+        $productId = (int) $this->getRequest()->getParam('id');
+        return $productId ? $this->productRepository->getById($productId) : null;
+    }
+    
+    
 
     /**
      * GetQonfiViewType
@@ -116,22 +131,24 @@ class DefaultBlock extends Template implements BlockInterface
     /**
      * GetQonfiProductId
      *
-     * Retrieve the Qonfi product ID from the current product registry
+     * Retrieve the current product ID if on a product page
      *
      * @return int|null
      */
-    public function getQonfiProductId()
+    public function getQonfiProductId(): ?int
     {
-        $objectManager = ObjectManager::getInstance();
-        $product = $objectManager->get(Registry::class)->registry('current_product');
-
-        return $product ? $product->getId() : null;
+        if ($this->getRequest()->getFullActionName() === 'catalog_product_view') {
+            $productId = (int) $this->getRequest()->getParam('id');
+            return $productId ?: null;
+        }
+        return null;
     }
+    
 
     /**
      * GetLocale
      *
-     * Retrieve the Qonfi category ID from the current category registry
+     * Retrieve the current locale
      *
      * @return int|null
      */

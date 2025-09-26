@@ -5,19 +5,10 @@ namespace Qonfi\Qonfi\Block;
 
 use Magento\Framework\View\Element\Template;
 use Magento\Widget\Block\BlockInterface;
-use Magento\Framework\App\ObjectManager;
-use Magento\Framework\Registry;
 use Magento\Framework\Locale\Resolver;
 
 class WysiwygBlock extends Template implements BlockInterface
 {
-    /**
-     * Registry instance
-     *
-     * @var \Magento\Framework\Registry
-     */
-    protected $registry;
-
     /**
      * @var Resolver
      */
@@ -101,12 +92,9 @@ class WysiwygBlock extends Template implements BlockInterface
      */
     public function getQonfiContentHtml() : string
     {
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $filterProvider = $objectManager->get(\Magento\Cms\Model\Template\FilterProvider::class);
-
         $html =  "<div class=\"qonfi-wysiwyg\">".$this->getData('data_qonfi_content_wysiwyg')."</div>";
 
-        return $filterProvider->getPageFilter()->filter($html);
+        return $html;
     }
 
 /**
@@ -127,16 +115,17 @@ class WysiwygBlock extends Template implements BlockInterface
     /**
      * GetQonfiProductId
      *
-     * Retrieve the Qonfi product ID from the current product registry
+     * Retrieve the Qonfi product ID if on a product page
      *
      * @return int|null
      */
-    public function getQonfiProductId()
+    public function getQonfiProductId(): ?int
     {
-        $objectManager = ObjectManager::getInstance();
-        $product = $objectManager->get(Registry::class)->registry('current_product');
-
-        return $product ? $product->getId() : null;
+        if ($this->getRequest()->getFullActionName() === 'catalog_product_view') {
+            $productId = (int) $this->getRequest()->getParam('id');
+            return $productId ?: null;
+        }
+        return null;
     }
 
     /**

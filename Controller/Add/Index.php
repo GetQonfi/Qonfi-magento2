@@ -104,7 +104,7 @@ class Index implements ActionInterface
         $product = null;
         try {
             $product = $this->productRepository->getById($productId);
-
+            
             // Only support simple products in this example
             if ($product->getTypeId() !== 'simple') {
                 throw new \Exception(__('This endpoint only supports simple products.'));

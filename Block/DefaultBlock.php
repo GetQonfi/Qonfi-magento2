@@ -137,12 +137,31 @@ class DefaultBlock extends Template implements BlockInterface
      */
     public function getQonfiProductId(): ?int
     {
-        if ($this->getRequest()->getFullActionName() === 'catalog_product_view') {
-            $productId = (int) $this->getRequest()->getParam('id');
-            return $productId ?: null;
+        if ($this->getRequest()->getFullActionName() !== 'catalog_product_view') {
+            return null;
         }
-        return null;
+
+        $productId = (int)$this->getRequest()->getParam('id');
+        if (!$productId) {
+            return null;
+        }
+
+        $product = $this->productRepository->getById($productId);
+        $productTypeId = $product->getTypeId();
+        
+        if ($productTypeId === 'configurable') {
+            $usedProducts = $product->getTypeInstance()->getUsedProducts($product);
+            foreach ($usedProducts as $child) {
+                $productId = (int)$child->getId();
+                break; // Get the first simple product ID
+            }
+        } else {
+            $productId = (int)$product->getId();
+        }
+
+        return $productId ?: null;
     }
+
     
 
     /**

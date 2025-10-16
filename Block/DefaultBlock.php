@@ -140,26 +140,22 @@ class DefaultBlock extends Template implements BlockInterface
         if ($this->getRequest()->getFullActionName() !== 'catalog_product_view') {
             return null;
         }
-
         $productId = (int)$this->getRequest()->getParam('id');
         if (!$productId) {
             return null;
         }
-
+        
         $product = $this->productRepository->getById($productId);
         $productTypeId = $product->getTypeId();
         
         if ($productTypeId === 'configurable') {
             $usedProducts = $product->getTypeInstance()->getUsedProducts($product);
             foreach ($usedProducts as $child) {
-                $productId = (int)$child->getId();
-                break; // Get the first simple product ID
+                return (int)$child->getId();
             }
-        } else {
-            $productId = (int)$product->getId();
         }
-
-        return $productId ?: null;
+        
+        return (int)$product->getId();
     }
 
     

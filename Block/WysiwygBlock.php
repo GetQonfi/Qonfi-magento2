@@ -136,14 +136,11 @@ class WysiwygBlock extends Template implements BlockInterface
         if ($productTypeId === 'configurable') {
             $usedProducts = $product->getTypeInstance()->getUsedProducts($product);
             foreach ($usedProducts as $child) {
-                $productId = (int)$child->getId();
-                break; // Get the first simple product ID
+                return (int)$child->getId();
             }
-        } else {
-            $productId = (int)$product->getId();
         }
 
-        return $productId ?: null;
+        return (int)$product->getId();
     }
 
     /**
